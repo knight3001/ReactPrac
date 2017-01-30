@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Clock from './Clock';
-import LoginControl from './Login';
-import Warning from './WarningBanner';
-import Reservation from './Reservation';
+import Clock from './prac/Clock';
+import LoginControl from './prac/Login';
+import Warning from './prac/WarningBanner';
+import Reservation from './prac/Reservation';
+import WaterBoiling from './prac/WaterBoiling';
+import SignUpDialog from './prac/Composition';
 
 class App extends Component {
   render() {
@@ -18,6 +20,8 @@ class App extends Component {
         <Clock />
         <LoginControl />
         <Reservation />
+        <WaterBoiling />
+        <SignUpDialog />
       </div>
     );
   }
