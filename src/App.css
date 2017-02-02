@@ -5,13 +5,14 @@
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
+  width:80px;
+  margin-left: -110px
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
+  background: url(../public/banner.jpg) no-repeat white;
+  height: 180px;
   padding: 20px;
-  color: white;
 }
 
 .App-intro {
@@ -21,4 +22,56 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+ol, ul {
+  padding-left: 30px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 30px !Important;
+  font-weight: bold;
+  line-height: 34px;
+  height: 60px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 60px;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+  margin:10px auto;
+}
+
+.game-info {
+  
 }
