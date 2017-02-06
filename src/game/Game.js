@@ -59,6 +59,7 @@ class Game extends Component {
             }],
             xIsNext: true,
             stepNumber: 0,
+            currentMove:[]
         };
     }
 
@@ -66,6 +67,8 @@ class Game extends Component {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const squares = current.squares.slice();
+        const currentMove = this.state.currentMove;
+        
         if (calculateWinner(squares)[0] || squares[i]) {
             return;
         }
@@ -75,7 +78,8 @@ class Game extends Component {
                 squares: squares
             }]),
             xIsNext: !this.state.xIsNext,
-            stepNumber: history.length
+            stepNumber: history.length,
+            currentMove: currentMove.concat(i)
         });
     }
 
@@ -83,6 +87,8 @@ class Game extends Component {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) ? false : true,
+            history: this.state.history.slice(0,step + 1),
+            currentMove: this.state.currentMove.slice(0,step)
         });
     }
 
@@ -90,14 +96,18 @@ class Game extends Component {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const finalRow = calculateWinner(current.squares);
-        const winner = finalRow[0];
+        const winner = finalRow[0];      
+        const currentMove = this.state.currentMove; 
 
         const moves = history.map((step, move) => {
+            let row = Math.floor(currentMove[move-1] / SquareNumber);
+            let line = currentMove[move-1] % SquareNumber;
             const desc = move ?
-                'Move #' + move :
+                'Move #' + move + ' (Row:' + (row + 1).toString() + ' Line:' + (line + 1).toString() + ')' :
                 'Game start';
+            const className = (this.state.stepNumber === move) ? 'list-group-item active' : 'list-group-item';
             return (
-                <a href="#" className="list-group-item" key={move} onClick={() => this.jumpTo(move)}>{desc}</a>
+                <a href="#" className={className}  key={move} onClick={() => this.jumpTo(move)}>{desc}</a>
             );
         });
 
