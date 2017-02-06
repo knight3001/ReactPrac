@@ -3,10 +3,8 @@ import React, { Component } from 'react';
 const SquareNumber = 6; //min 5
 
 function Square(props) {
-    let className = "square btn btn-default";
-    className = props.winner ? className + " disabled" : className;
     return (
-        <button className={className} onClick={() => props.onClick()}>
+        <button className={props.className} onClick={() => props.onClick()}>
             {props.value}
         </button>
     );
@@ -14,7 +12,16 @@ function Square(props) {
 
 class Board extends Component {
     renderSquare(i) {
-        return <Square winner={this.props.winner} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} key={i} />;
+        let className;
+        const result = this.props.finalRow;
+        if ( result[1] && result[1].indexOf(i) > -1 ){
+            className = "square btn btn-primary";
+        }
+        else{
+            className = "square btn btn-default";
+        }
+        className = result[0] ? className + " disabled" : className;
+        return <Square className={className} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} key={i} />;
     }
 
     renderRow(i){
@@ -59,7 +66,7 @@ class Game extends Component {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const squares = current.squares.slice();
-        if (calculateWinner(squares) || squares[i]) {
+        if (calculateWinner(squares)[0] || squares[i]) {
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
@@ -82,7 +89,8 @@ class Game extends Component {
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares);
+        const finalRow = calculateWinner(current.squares);
+        const winner = finalRow[0];
 
         const moves = history.map((step, move) => {
             const desc = move ?
@@ -115,7 +123,7 @@ class Game extends Component {
                     <div className="game row">
                         <div className="game-board col-md-3 col-md-offset-4">
                             <Board
-                                winner={winner}
+                                finalRow={finalRow}
                                 squares={current.squares}
                                 onClick={(i) => this.handleClick(i)}
                                 />
@@ -137,10 +145,10 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c, d] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
-            return squares[a];
+            return [squares[a], [a,b,c,d]];
         }
     }
-    return null;
+    return [null,null];
 }
 
 function generateWinLine(n){
@@ -161,6 +169,12 @@ function generateWinLine(n){
     for (let i = 0; i < n - 3; i++){
         for(let j = 0; j < n - 3; j++){
             lines.push([i * n + j , i * n + j + n + 1, i * n + j + (n + 1) * 2, i * n + j + (n + 1) * 3]);
+        }
+    }
+
+    for (let i = 0; i < n - 3; i++){
+        for(let j = 3; j < n; j++){
+            lines.push([i * n + j , i * n + j + n - 1, i * n + j + (n - 1) * 2, i * n + j + (n - 1) * 3]);
         }
     }
 
