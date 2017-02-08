@@ -43,7 +43,7 @@ class Board extends Component {
         }
 
         return (
-            <div>
+            <div className="game-board">
                 {buf}
             </div>
         );
@@ -131,16 +131,18 @@ class Game extends Component {
                 <div className="panel-heading"><h3 className="panel-title">Tic-Tac-Toe game</h3></div>
                 <div className="panel-body">
                     <div className="game row">
-                        <div className="game-board col-md-3 col-md-offset-4">
+                        <div className="col-xs-12 col-sm-6 col-md-4 col-md-offset-3">
                             <Board
                                 finalRow={finalRow}
                                 squares={current.squares}
                                 onClick={(i) => this.handleClick(i)}
                                 />
                         </div>
-                        <div className="game-info col-md-2">
-                            <div className={statusClass}>{status}</div>
-                            <div className="list-group">{moves}</div>
+                        <div className="col-xs-12 col-sm-6 col-md-2">
+                            <div className="game-info">
+                                <div className={statusClass}>{status}</div>
+                                <div className="list-group">{moves}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
