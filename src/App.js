@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
-import logo from '../public/icon.jpg';
+import logo from '../public/icon.png';
 import './App.css';
 /*import Clock from './prac/Clock';
 import LoginControl from './prac/Login';
@@ -17,7 +17,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         </div>
