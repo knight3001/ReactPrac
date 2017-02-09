@@ -77,3 +77,7 @@ ol, ul {
   margin: 10px auto;
   width: 230px;
 }
+
+.hidden{
+  display: none;
+}
