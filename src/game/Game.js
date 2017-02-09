@@ -60,8 +60,8 @@ class UserForm extends Component {
 
     handleChange() {
         this.props.onUserInput(
-            this.playerO.value,
-            this.playerX.value
+            (this.playerO.value.length > 0 ? this.playerO.value[0].toUpperCase() + this.playerO.value.slice(1) : this.playerO.value),
+            (this.playerX.value.length > 0 ? this.playerX.value[0].toUpperCase() + this.playerX.value.slice(1) : this.playerX.value)
         )
     }
 
@@ -70,11 +70,13 @@ class UserForm extends Component {
             <form className="form-inline">
                 <div className="form-group">
                     <label htmlFor="playerX">Player(X)</label>
-                    <input type="text" className="form-control" id="playerX" placeholder="Mike" value={this.props.playerX} ref={(input) => this.playerX = input} onChange={this.handleChange} />
+                    <input type="text" className="form-control" id="playerX" placeholder="Mike" maxLength="10"
+                        value={this.props.playerX} ref={(input) => this.playerX = input} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="playerO">Player(O)</label>
-                    <input type="email" className="form-control" id="playerO" placeholder="Jane" value={this.props.playerO} ref={(input) => this.playerO = input} onChange={this.handleChange} />
+                    <input type="email" className="form-control" id="playerO" placeholder="Jane" maxLength="10"
+                        value={this.props.playerO} ref={(input) => this.playerO = input} onChange={this.handleChange} />
                 </div>
             </form>
         );
@@ -85,7 +87,7 @@ class Fireworks extends Component {
     render() {
         const winner = this.props.winner;
         let className;
-        className = (winner? 'pyro' : 'hidden');
+        className = (winner ? 'pyro' : 'hidden');
         return (
             <div className={className}>
                 <div className="before" />
@@ -105,8 +107,8 @@ class Game extends Component {
             xIsNext: true,
             stepNumber: 0,
             currentMove: [],
-            playerX: 'Mike',
-            playerO: 'Jane'
+            playerX: '',
+            playerO: ''
         };
 
         this.handleUserInput = this.handleUserInput.bind(this);
@@ -148,6 +150,12 @@ class Game extends Component {
         });
     }
 
+    middleMove() {
+        return (
+            <a href="#" className="list-group-item disabled" key="-1">......</a>
+        );
+    }
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
@@ -160,14 +168,25 @@ class Game extends Component {
         const moves = history.map((step, move) => {
             let row = Math.floor(currentMove[move - 1] / SquareNumber);
             let line = currentMove[move - 1] % SquareNumber;
+            let currentUser = (move % 2 === 0 ? playerO : playerX)
             const desc = move ?
-                'Move #' + move + ' (' + (row + 1).toString() + ',' + (line + 1).toString() + ')' :
+                'Move #' + move + ' ' + currentUser + ' (' + (row + 1).toString() + ',' + (line + 1).toString() + ')' :
                 'Game start';
             const className = (this.state.stepNumber === move) ? 'list-group-item active' : 'list-group-item';
             return (
                 <a href="#" className={className} key={move} onClick={() => this.jumpTo(move)}>{desc}</a>
             );
         });
+
+        let movesList;
+        if (moves.length > 10) {
+            movesList = moves.slice(0, 5);
+            movesList.push(this.middleMove());
+            movesList.push(moves.slice(moves.length - 5));
+        }
+        else {
+            movesList = moves;
+        }
 
         let status;
         let statusClass;
@@ -205,7 +224,7 @@ class Game extends Component {
                         <div className="col-xs-12 col-sm-6 col-md-2">
                             <div className="game-info">
                                 <div className={statusClass}>{status}</div>
-                                <div className="list-group">{moves}</div>
+                                <div className="list-group">{movesList}</div>
                             </div>
                         </div>
                     </div>
