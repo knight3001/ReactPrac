@@ -81,3 +81,14 @@ ol, ul {
 .hidden{
   display: none;
 }
+
+@media screen and (max-width:415px){
+  .square{
+    width: 45px;
+    height: 45px;
+    font-size: 24px !Important;
+  }
+  .game-board{
+    width: 270px;
+  }
+}
