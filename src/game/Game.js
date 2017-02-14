@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 
+import {getRandomName} from './RandomName';
 import '../fireworks.css';
 
 const SquareNumber = 6; //min 5
+
+const cursorStyle = {
+    cursor: 'pointer'
+}
 
 function Square(props) {
     return (
@@ -70,13 +75,23 @@ class UserForm extends Component {
             <form className="form-inline">
                 <div className="form-group">
                     <label htmlFor="playerX">Player(X)</label>
-                    <input type="text" className="form-control" id="playerX" placeholder="Mike" maxLength="10"
-                        value={this.props.playerX} ref={(input) => this.playerX = input} onChange={this.handleChange} />
+                    <div className="input-group">
+                        <span className="input-group-addon" style={cursorStyle} onClick={() => this.props.glyhClick('X')} key='X'>
+                            <span className="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        </span>
+                        <input type="text" className="form-control" id="playerX" placeholder="Mike" maxLength="10"
+                            value={this.props.playerX} ref={(input) => this.playerX = input} onChange={this.handleChange} />
+                    </div>
                 </div>
                 <div className="form-group">
                     <label htmlFor="playerO">Player(O)</label>
-                    <input type="email" className="form-control" id="playerO" placeholder="Jane" maxLength="10"
-                        value={this.props.playerO} ref={(input) => this.playerO = input} onChange={this.handleChange} />
+                    <div className="input-group">
+                        <span className="input-group-addon" style={cursorStyle} onClick={() => this.props.glyhClick('O')} key='O'>
+                            <span className="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        </span>
+                        <input type="text" className="form-control" id="playerO" placeholder="Jane" maxLength="10"
+                            value={this.props.playerO} ref={(input) => this.playerO = input} onChange={this.handleChange} />
+                    </div>
                 </div>
             </form>
         );
@@ -141,6 +156,19 @@ class Game extends Component {
         })
     }
 
+    glyhClick(i){
+        if (i === 'X'){
+             this.setState({
+                playerX: getRandomName()
+             })
+        }
+        else{
+             this.setState({
+                playerO: getRandomName()
+             })
+        }
+    }
+
     jumpTo(step) {
         this.setState({
             stepNumber: step,
@@ -164,7 +192,7 @@ class Game extends Component {
         const currentMove = this.state.currentMove;
         const playerO = this.state.playerO;
         const playerX = this.state.playerX;
-
+        
         const moves = history.map((step, move) => {
             let row = Math.floor(currentMove[move - 1] / SquareNumber);
             let line = currentMove[move - 1] % SquareNumber;
@@ -214,6 +242,7 @@ class Game extends Component {
                                 playerX={this.state.playerX}
                                 playerO={this.state.playerO}
                                 onUserInput={this.handleUserInput}
+                                glyhClick={(i) => this.glyhClick(i)}
                                 />
                             <Board
                                 finalRow={finalRow}
