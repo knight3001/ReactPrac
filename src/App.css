@@ -77,6 +77,14 @@ ol, ul {
   margin: 10px auto;
   width: 230px;
 }
+.game-form{
+  width: 356px;
+  margin: 0 auto;
+}
+
+.form-horizontal .form-group {
+    margin-right: 0px !IMPORTANT;
+}
 
 .hidden{
   display: none;
@@ -89,6 +97,9 @@ ol, ul {
     font-size: 24px !Important;
   }
   .game-board{
+    width: 270px;
+  }
+  .game-form{
     width: 270px;
   }
 }

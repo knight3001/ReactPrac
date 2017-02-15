@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
-import {getRandomName} from './RandomName';
-import '../fireworks.css';
+import { getRandomName } from './RandomName';
+import Player from './Player';
+import '../css/fireworks.css';
+import '../css/bootstrap.icon-extra.min.css';
 
 const SquareNumber = 6; //min 5
 
@@ -71,28 +73,53 @@ class UserForm extends Component {
     }
 
     render() {
+        const winner = this.props.winner;
+        let classX, classO, disableBit;
+        if (winner === 'X') {
+            classX = "form-group has-success";
+            classO = "form-group";
+            disableBit = "disabled";
+        }
+        else if (winner === 'O') {
+            classX = "form-group";
+            classO = "form-group has-success";
+            disableBit = "disabled";
+        }
+        else {
+            classX = "form-group";
+            classO = "form-group";
+            disableBit = "";
+        }
         return (
-            <form className="form-inline">
-                <div className="form-group">
-                    <label htmlFor="playerX">Player(X)</label>
-                    <div className="input-group">
-                        <span className="input-group-addon" style={cursorStyle} onClick={() => this.props.glyhClick('X')} key='X'>
-                            <span className="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        </span>
-                        <input type="text" className="form-control" id="playerX" placeholder="Mike" maxLength="10"
-                            value={this.props.playerX} ref={(input) => this.playerX = input} onChange={this.handleChange} />
+            <form className="game-form form-horizontal">
+                <fieldset disabled={disableBit}>
+                    <div className={classX}>
+                        <label htmlFor="playerX" className="col-sm-3 control-label">Player(X)</label>
+                        <div className="input-group col-sm-9">
+                            <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('X')} key='XG'>
+                                <span className={this.props.playerX.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
+                            </span>
+                            <input type="text" className="form-control" id="playerX" placeholder="Mike" maxLength="10"
+                                value={this.props.playerX.name} ref={(input) => this.playerX = input} onChange={this.handleChange} />
+                            <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.glyhClick('X')} key='X'>
+                                <span className="icon-extra icon-playing-dices" aria-hidden="true"></span>
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="playerO">Player(O)</label>
-                    <div className="input-group">
-                        <span className="input-group-addon" style={cursorStyle} onClick={() => this.props.glyhClick('O')} key='O'>
-                            <span className="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        </span>
-                        <input type="text" className="form-control" id="playerO" placeholder="Jane" maxLength="10"
-                            value={this.props.playerO} ref={(input) => this.playerO = input} onChange={this.handleChange} />
+                    <div className={classO}>
+                        <label htmlFor="playerO" className="col-sm-3 control-label">Player(O)</label>
+                        <div className="input-group col-sm-9">
+                            <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('O')} key='OG'>
+                                <span className={this.props.playerO.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
+                            </span>
+                            <input type="text" className="form-control" id="playerO" placeholder="Jane" maxLength="10"
+                                value={this.props.playerO.name} ref={(input) => this.playerO = input} onChange={this.handleChange} />
+                            <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.glyhClick('O')} key='O'>
+                                <span className="icon-extra icon-playing-dices" aria-hidden="true"></span>
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
             </form>
         );
     }
@@ -115,6 +142,8 @@ class Fireworks extends Component {
 class Game extends Component {
     constructor() {
         super();
+        let playerInit = Player;
+        playerInit = {name:'', gender: 1};
         this.state = {
             history: [{
                 squares: Array(SquareNumber * SquareNumber).fill(null)
@@ -122,8 +151,8 @@ class Game extends Component {
             xIsNext: true,
             stepNumber: 0,
             currentMove: [],
-            playerX: '',
-            playerO: ''
+            playerX: playerInit,
+            playerO: playerInit
         };
 
         this.handleUserInput = this.handleUserInput.bind(this);
@@ -151,21 +180,64 @@ class Game extends Component {
 
     handleUserInput(playerO, playerX) {
         this.setState({
-            playerO: playerO,
-            playerX: playerX
+            playerO: {
+                name: playerO
+            },
+            playerX: {
+                name: playerX
+            }
         })
     }
 
-    glyhClick(i){
-        if (i === 'X'){
-             this.setState({
-                playerX: getRandomName()
-             })
+    glyhClick(i) {
+        const history = this.state.history;
+        const current = history[this.state.stepNumber];
+        const finalRow = calculateWinner(current.squares);
+        const winner = finalRow[0];
+
+        if(!winner){
+            if (i === 'X') {
+                this.setState({
+                    playerX: {
+                        name: getRandomName(this.state.playerX.gender),
+                        gender: this.state.playerX.gender
+                    }
+                })
+            }
+            else {
+                this.setState({
+                    playerO: {
+                        name: getRandomName(this.state.playerO.gender),
+                        gender: this.state.playerO.gender
+                    }
+                })
+            }
         }
-        else{
-             this.setState({
-                playerO: getRandomName()
-             })
+    }
+
+    genderClick(i) {
+        const history = this.state.history;
+        const current = history[this.state.stepNumber];
+        const finalRow = calculateWinner(current.squares);
+        const winner = finalRow[0];
+
+        if(!winner){
+            if (i === 'X') {
+                this.setState({
+                    playerX: {
+                        name: this.state.playerX.name,
+                        gender: (this.state.playerX.gender===1? 0 : 1)
+                    }
+                })
+            }
+            else {
+                this.setState({
+                    playerO: {
+                        name: this.state.playerO.name,
+                        gender: (this.state.playerO.gender===1? 0 : 1)
+                    }
+                })
+            }
         }
     }
 
@@ -192,13 +264,13 @@ class Game extends Component {
         const currentMove = this.state.currentMove;
         const playerO = this.state.playerO;
         const playerX = this.state.playerX;
-        
+
         const moves = history.map((step, move) => {
             let row = Math.floor(currentMove[move - 1] / SquareNumber);
             let line = currentMove[move - 1] % SquareNumber;
             let currentUser = (move % 2 === 0 ? playerO : playerX)
             const desc = move ?
-                'Move #' + move + ' ' + currentUser + ' (' + (row + 1).toString() + ',' + (line + 1).toString() + ')' :
+                'Move #' + move + ' ' + currentUser.name + ' (' + (row + 1).toString() + ',' + (line + 1).toString() + ')' :
                 'Game start';
             const className = (this.state.stepNumber === move) ? 'list-group-item active' : 'list-group-item';
             return (
@@ -219,7 +291,7 @@ class Game extends Component {
         let status;
         let statusClass;
         if (winner) {
-            status = 'Winner: ' + (winner === 'X' ? playerX + '(X)' : playerO + '(O)');
+            status = 'Winner: ' + (winner === 'X' ? playerX.name + '(X)' : playerO.name + '(O)');
             statusClass = "alert alert-success";
         }
         else if (current.squares.indexOf(null) < 0) {
@@ -227,7 +299,7 @@ class Game extends Component {
             statusClass = "alert alert-warning";
         }
         else {
-            status = 'Next player: ' + (this.state.xIsNext ? playerX + '(X)' : playerO + '(O)');
+            status = 'Next player: ' + (this.state.xIsNext ? playerX.name + '(X)' : playerO.name + '(O)');
             statusClass = "alert alert-info";
         }
 
@@ -243,6 +315,8 @@ class Game extends Component {
                                 playerO={this.state.playerO}
                                 onUserInput={this.handleUserInput}
                                 glyhClick={(i) => this.glyhClick(i)}
+                                genderClick={(i) => this.genderClick(i)}
+                                winner={winner}
                                 />
                             <Board
                                 finalRow={finalRow}
