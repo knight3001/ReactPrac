@@ -181,10 +181,12 @@ class Game extends Component {
     handleUserInput(playerO, playerX) {
         this.setState({
             playerO: {
-                name: playerO
+                name: playerO,
+                gender: this.state.playerO.gender
             },
             playerX: {
-                name: playerX
+                name: playerX,
+                gender: this.state.playerX.gender
             }
         })
     }
