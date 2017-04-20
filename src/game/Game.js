@@ -4,6 +4,8 @@ import { getRandomName } from './RandomName';
 import Player from './Player';
 import '../css/fireworks.css';
 import '../css/bootstrap.icon-extra.min.css';
+import Cryface from '../img/cryface.png';
+import '../css/bounce.css';
 
 const SquareNumber = 6; //min 5
 
@@ -94,7 +96,7 @@ class UserForm extends Component {
             <form className="game-form form-horizontal">
                 <fieldset disabled={disableBit}>
                     <div className={classX}>
-                        <label htmlFor="playerX" className="col-sm-3 control-label">Player(X)</label>
+                        <label htmlFor="playerX" className="col-sm-3 control-label">You (X)</label>
                         <div className="input-group col-sm-9">
                             <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('X')} key='XG'>
                                 <span className={this.props.playerX.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
@@ -107,7 +109,7 @@ class UserForm extends Component {
                         </div>
                     </div>
                     <div className={classO}>
-                        <label htmlFor="playerO" className="col-sm-3 control-label">Player(O)</label>
+                        <label htmlFor="playerO" className="col-sm-3 control-label">AI (O)</label>
                         <div className="input-group col-sm-9">
                             <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('O')} key='OG'>
                                 <span className={this.props.playerO.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
@@ -125,15 +127,41 @@ class UserForm extends Component {
     }
 }
 
-class Fireworks extends Component {
+class WinnerJudge extends Component{
     render() {
         const winner = this.props.winner;
-        let className;
-        className = (winner ? 'pyro' : 'hidden');
+        if (winner === "X"){
+            return (
+                <Fireworks />
+            )
+        }
+        else if (winner === "O"){
+            return (
+                <GameLoss />
+            )
+        }
+        else{
+            return null;
+        }
+    }
+}
+
+class Fireworks extends Component {
+    render() {
         return (
-            <div className={className}>
+            <div className="pyro">
                 <div className="before" />
                 <div className="after" />
+            </div>
+        )
+    }
+}
+
+class GameLoss extends Component{
+    render() {
+        return(
+            <div className="center-middle">
+                <img src={Cryface} className="bounce" alt="Cry Face" />
             </div>
         )
     }
@@ -148,7 +176,6 @@ class Game extends Component {
             history: [{
                 squares: Array(SquareNumber * SquareNumber).fill(null)
             }],
-            xIsNext: true,
             stepNumber: 0,
             currentMove: [],
             playerX: playerInit,
@@ -167,15 +194,21 @@ class Game extends Component {
         if (calculateWinner(squares)[0] || squares[i]) {
             return;
         }
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        squares[i] = 'X';
+        this.handleAiMove(squares);
+
         this.setState({
             history: history.concat([{
                 squares: squares
             }]),
-            xIsNext: !this.state.xIsNext,
             stepNumber: history.length,
             currentMove: currentMove.concat(i)
         });
+    }
+
+    handleAiMove(squares){
+        let moveId = calculateAiMove(squares);
+        squares[moveId] = 'O';
     }
 
     handleUserInput(playerO, playerX) {
@@ -246,7 +279,6 @@ class Game extends Component {
     jumpTo(step) {
         this.setState({
             stepNumber: step,
-            xIsNext: (step % 2) ? false : true,
             history: this.state.history.slice(0, step + 1),
             currentMove: this.state.currentMove.slice(0, step)
         });
@@ -270,9 +302,8 @@ class Game extends Component {
         const moves = history.map((step, move) => {
             let row = Math.floor(currentMove[move - 1] / SquareNumber);
             let line = currentMove[move - 1] % SquareNumber;
-            let currentUser = (move % 2 === 0 ? playerO : playerX)
             const desc = move ?
-                'Move #' + move + ' ' + currentUser.name + ' (' + (row + 1).toString() + ',' + (line + 1).toString() + ')' :
+                'Move #' + move + ' (' + (row + 1).toString() + ',' + (line + 1).toString() + ')' :
                 'Game start';
             const className = (this.state.stepNumber === move) ? 'list-group-item active' : 'list-group-item';
             return (
@@ -301,7 +332,7 @@ class Game extends Component {
             statusClass = "alert alert-warning";
         }
         else {
-            status = 'Next player: ' + (this.state.xIsNext ? playerX.name + '(X)' : playerO.name + '(O)');
+            status = 'Come On! ' + playerX.name + '(X)';
             statusClass = "alert alert-info";
         }
 
@@ -309,7 +340,7 @@ class Game extends Component {
             <div className="panel panel-default">
                 <div className="panel-heading"><h3 className="panel-title">Tic-Tac-Toe game</h3></div>
                 <div className="panel-body">
-                    <Fireworks winner={winner} />
+                    <WinnerJudge winner={winner} />
                     <div className="game row">
                         <div className="col-xs-12 col-sm-6 col-md-4 col-md-offset-3">
                             <UserForm
@@ -379,6 +410,14 @@ function generateWinLine(n) {
     }
 
     return lines;
+}
+
+function calculateAiMove(squares) {
+    for (let i = 0; i < squares.length; i++) {
+        if (squares[i] === null){
+            return i;
+        }
+    }
 }
 
 export default Game;
