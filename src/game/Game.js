@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 
 import { getRandomName } from './RandomName';
+import { calculateAiMove } from './AiMove';
 import Player from './Player';
+
+import Cryface from '../img/cryface.png';
 import '../css/fireworks.css';
 import '../css/bootstrap.icon-extra.min.css';
-import Cryface from '../img/cryface.png';
 import '../css/bounce.css';
 
-const SquareNumber = 6; //min 5
+const SquareNumber = 8; //min 5
 
 const cursorStyle = {
     cursor: 'pointer'
@@ -410,14 +412,6 @@ function generateWinLine(n) {
     }
 
     return lines;
-}
-
-function calculateAiMove(squares) {
-    for (let i = 0; i < squares.length; i++) {
-        if (squares[i] === null){
-            return i;
-        }
-    }
 }
 
 export default Game;

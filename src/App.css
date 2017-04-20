@@ -46,15 +46,15 @@ ol, ul {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  font-size: 30px !Important;
+  font-size: 24px !Important;
   font-weight: bold;
-  line-height: 34px;
-  height: 60px;
+  line-height: 24px !Important;
+  height: 45px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 60px;
+  width: 45px;
 }
 
 .square:focus {
