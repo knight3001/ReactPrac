@@ -98,8 +98,8 @@ class UserForm extends Component {
             <form className="game-form form-horizontal">
                 <fieldset disabled={disableBit}>
                     <div className={classX}>
-                        <label htmlFor="playerX" className="col-sm-3 control-label">You (X)</label>
-                        <div className="input-group col-sm-9">
+                        <label htmlFor="playerX" className="col-sm-3 col-xs-4 control-label">You (X)</label>
+                        <div className="input-group col-sm-9 col-xs-8">
                             <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('X')} key='XG'>
                                 <span className={this.props.playerX.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
                             </span>
@@ -111,8 +111,8 @@ class UserForm extends Component {
                         </div>
                     </div>
                     <div className={classO}>
-                        <label htmlFor="playerO" className="col-sm-3 control-label">AI (O)</label>
-                        <div className="input-group col-sm-9">
+                        <label htmlFor="playerO" className="col-sm-3 col-xs-4 control-label">AI (O)</label>
+                        <div className="input-group col-sm-9 col-xs-8">
                             <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('O')} key='OG'>
                                 <span className={this.props.playerO.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
                             </span>
