@@ -172,16 +172,18 @@ class GameLoss extends Component{
 class Game extends Component {
     constructor() {
         super();
-        let playerInit = Player;
-        playerInit = {name:'', gender: 1};
+        let playerInitX = Player;
+        playerInitX = {name:'Song', gender: 2};
+        let playerInitO = Player;
+        playerInitO = {name:'Terry', gender: 1};
         this.state = {
             history: [{
                 squares: Array(SquareNumber * SquareNumber).fill(null)
             }],
             stepNumber: 0,
             currentMove: [],
-            playerX: playerInit,
-            playerO: playerInit
+            playerX: playerInitX,
+            playerO: playerInitO
         };
 
         this.handleUserInput = this.handleUserInput.bind(this);
@@ -197,7 +199,9 @@ class Game extends Component {
             return;
         }
         squares[i] = 'X';
-        this.handleAiMove(squares);
+        if(calculateWinner(squares)[0] !== "X"){
+            this.handleAiMove(squares);
+        }
 
         this.setState({
             history: history.concat([{

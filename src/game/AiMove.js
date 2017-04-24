@@ -22,10 +22,10 @@ export function calculateAiMove(squares) {
             if (scores["O"].length === 4 && scores["null"].length === 1) {
                 return scores["null"][0];
             }
-            else if (scores["X"].length === 4 && scores["null"].length === 1){
+            else if (scores["X"].length === 4 && scores["null"].length === 1) {
                 return scores["null"][0];
             }
-            else{
+            else {
                 if (scores["O"].length === 3 && scores["null"].length === 2) {
                     checkItemInDict(scores["null"], weightO, 10);
                 }
@@ -47,11 +47,20 @@ export function calculateAiMove(squares) {
                 }
             }
         }
-        if(findMaxInDict(weightO)[0] <= findMaxInDict(weightX)[0]){
-            return findMaxInDict(weightX)[1];
+        if (findMaxInDict(weightO)[0] !== 0) {
+            if (findMaxInDict(weightO)[0] <= findMaxInDict(weightX)[0]) {
+                return findMaxInDict(weightX)[1];
+            }
+            else {
+                return findMaxInDict(weightO)[1];
+            }
         }
-        else{
-            return findMaxInDict(weightO)[1];
+        else {
+            for (let i = 0; i < squares.length; i++) {
+                if (squares[i] === null) {
+                    return i;
+                }
+            }
         }
     }
 }
@@ -87,7 +96,7 @@ export function generateWinLine(n) {
 }
 
 function findChance(squares, list) {
-    let result = {"O":[], "X":[], "null": []};
+    let result = { "O": [], "X": [], "null": [] };
     for (let i = 0; i < list.length; i++) {
         if (squares[list[i]] === "O") {
             result["O"].push(list[i]);
@@ -95,31 +104,31 @@ function findChance(squares, list) {
         else if (squares[list[i]] === "X") {
             result["X"].push(list[i]);
         }
-        else{
+        else {
             result["null"].push(list[i]);
         }
     }
     return result;
 }
 
-function findMaxInDict(dict){
+function findMaxInDict(dict) {
     let maxVal = 0;
     let index = 0;
-    for (let key in dict){
-        if(dict[key] > maxVal){
+    for (let key in dict) {
+        if (dict[key] > maxVal) {
             maxVal = dict[key];
             index = key;
         }
     }
-    return [maxVal,index];
+    return [maxVal, index];
 }
 
-function checkItemInDict(list, dict, score){
+function checkItemInDict(list, dict, score) {
     for (let i = 0; i < list.length; i++) {
-        if(list[i] in dict){
+        if (list[i] in dict) {
             dict[list[i]] += score;
         }
-        else{
+        else {
             dict[list[i]] = score;
         }
     }
