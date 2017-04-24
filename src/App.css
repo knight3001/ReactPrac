@@ -65,20 +65,16 @@ ol, ul {
   background: #ddd;
 }
 
-.game {
-
-}
-
 .game-board{
   margin: 10px auto;
-  width: 352px;
+  width: 440px;
 }
 .game-info {
   margin: 10px auto;
   width: 230px;
 }
 .game-form{
-  width: 352px;
+  width: 440px;
   margin: 0 auto;
   padding-right: 10px;
 }
@@ -111,11 +107,11 @@ ol, ul {
     padding: 0 !important;
   }
   .game-board{
-    width: 232px;
+    width: 290px;
     padding: 0px;
   }
   .game-form{
-    width: 232px;
+    width: 290px;
   }
   .form-horizontal .control-label {
     padding-top: 7px;
