@@ -1,9 +1,11 @@
 const SquareNumber = 10; //min 5
+let CheatMode = false;
 
 // squares: Array(SquareNumber * SquareNumber).fill(null)
 export function calculateAiMove(squares) {
     let weightO = {};
     let weightX = {};
+    let WinningScores = CheatMode? [1,1,1] : [1,3,5];
     if (squares.indexOf("O") < 0) {
         // first move for AI
         let x = squares.indexOf("X");
@@ -27,23 +29,23 @@ export function calculateAiMove(squares) {
             }
             else {
                 if (scores["O"].length === 3 && scores["null"].length === 2) {
-                    checkItemInDict(scores["null"], weightO, 10);
+                    checkItemInDict(scores["null"], weightO, WinningScores[2]);
                 }
                 else if (scores["O"].length === 2 && scores["null"].length === 3) {
-                    checkItemInDict(scores["null"], weightO, 3);
+                    checkItemInDict(scores["null"], weightO, WinningScores[1]);
                 }
                 else if (scores["O"].length === 1 && scores["null"].length === 4) {
-                    checkItemInDict(scores["null"], weightO, 1);
+                    checkItemInDict(scores["null"], weightO, WinningScores[0]);
                 }
 
                 if (scores["X"].length === 3 && scores["null"].length === 2) {
-                    checkItemInDict(scores["null"], weightX, 10);
+                    checkItemInDict(scores["null"], weightX, WinningScores[2]);
                 }
                 else if (scores["X"].length === 2 && scores["null"].length === 3) {
-                    checkItemInDict(scores["null"], weightX, 3);
+                    checkItemInDict(scores["null"], weightX, WinningScores[1]);
                 }
                 else if (scores["X"].length === 1 && scores["null"].length === 4) {
-                    checkItemInDict(scores["null"], weightX, 1);
+                    checkItemInDict(scores["null"], weightX, WinningScores[0]);
                 }
             }
         }
@@ -134,4 +136,6 @@ function checkItemInDict(list, dict, score) {
     }
 }
 
-
+export function changeDifficult(){
+    CheatMode = !CheatMode;
+}

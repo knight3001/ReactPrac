@@ -5,9 +5,6 @@ import { calculateAiMove, generateWinLine } from './AiMove';
 import Player from './Player';
 
 import Cryface from '../img/cryface.png';
-import '../css/fireworks.css';
-import '../css/bootstrap.icon-extra.min.css';
-import '../css/bounce.css';
 
 const SquareNumber = 10; //min 5
 
@@ -51,12 +48,13 @@ class Board extends Component {
 
     render() {
         let buf = [];
+        const cheatMode = this.props.cheatMode;
         for (let i = 0; i < SquareNumber; i++) {
             buf.push(this.renderRow(i));
         }
 
         return (
-            <div className="game-board">
+            <div className={cheatMode ? "game-board spin" : "game-board"}>
                 {buf}
             </div>
         );
@@ -101,7 +99,7 @@ class UserForm extends Component {
                         <label htmlFor="playerX" className="col-sm-3 col-xs-4 control-label">You (X)</label>
                         <div className="input-group col-sm-9 col-xs-8">
                             <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('X')} key='XG'>
-                                <span className={this.props.playerX.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
+                                <span className={this.props.playerX.gender === 1 ? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
                             </span>
                             <input type="text" className="form-control" id="playerX" placeholder="Mike" maxLength="10"
                                 value={this.props.playerX.name} ref={(input) => this.playerX = input} onChange={this.handleChange} />
@@ -114,7 +112,7 @@ class UserForm extends Component {
                         <label htmlFor="playerO" className="col-sm-3 col-xs-4 control-label">AI (O)</label>
                         <div className="input-group col-sm-9 col-xs-8">
                             <span className="input-group-addon" style={(winner ? null : cursorStyle)} onClick={() => this.props.genderClick('O')} key='OG'>
-                                <span className={this.props.playerO.gender===1? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
+                                <span className={this.props.playerO.gender === 1 ? "icon-extra icon-boy" : "icon-extra icon-girl"} aria-hidden="true"></span>
                             </span>
                             <input type="text" className="form-control" id="playerO" placeholder="Jane" maxLength="10"
                                 value={this.props.playerO.name} ref={(input) => this.playerO = input} onChange={this.handleChange} />
@@ -129,20 +127,20 @@ class UserForm extends Component {
     }
 }
 
-class WinnerJudge extends Component{
+class WinnerJudge extends Component {
     render() {
         const winner = this.props.winner;
-        if (winner === "X"){
+        if (winner === "X") {
             return (
                 <Fireworks />
             )
         }
-        else if (winner === "O"){
+        else if (winner === "O") {
             return (
                 <GameLoss />
             )
         }
-        else{
+        else {
             return null;
         }
     }
@@ -159,9 +157,9 @@ class Fireworks extends Component {
     }
 }
 
-class GameLoss extends Component{
+class GameLoss extends Component {
     render() {
-        return(
+        return (
             <div className="center-middle">
                 <img src={Cryface} className="bounce" alt="Cry Face" />
             </div>
@@ -169,13 +167,61 @@ class GameLoss extends Component{
     }
 }
 
+class ModeInfor extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modeChanged: false,
+            fadeOut: false
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            modeChanged: nextProps.cheatMode !== this.props.cheatMode,
+            fadeOut: false
+        });
+        setTimeout(function (self) {
+            self.setState({
+                fadeOut: true
+            });
+        }, 3000, this);
+    }
+
+    render() {
+        const cheatMode = this.props.cheatMode;
+        const display = this.state.modeChanged;
+        const fadeOut = this.state.fadeOut;
+        let classname = "mode-info bounce-once";
+        if (display) {
+            if (cheatMode) {
+                return (
+                    <div className={fadeOut ? classname + " hidden" : classname} style={{ color: "#53b909" }}>
+                        <span>WOW! You Found the Secret Cheat Mode!</span>
+                    </div>
+                )
+            }
+            else {
+                return (
+                    <div className={fadeOut ? classname + " hidden" : classname} style={{ color: "#ff8c8c" }}>
+                        <span>Secret Cheat Mode is OFF.</span>
+                    </div>
+                )
+            }
+        }
+        else {
+            return null;
+        }
+    }
+}
+
 class Game extends Component {
     constructor() {
         super();
         let playerInitX = Player;
-        playerInitX = {name:'Song', gender: 2};
+        playerInitX = { name: 'Song', gender: 2 };
         let playerInitO = Player;
-        playerInitO = {name:'Terry', gender: 1};
+        playerInitO = { name: 'Terry', gender: 1 };
         this.state = {
             history: [{
                 squares: Array(SquareNumber * SquareNumber).fill(null)
@@ -199,7 +245,7 @@ class Game extends Component {
             return;
         }
         squares[i] = 'X';
-        if(calculateWinner(squares)[0] !== "X"){
+        if (calculateWinner(squares)[0] !== "X") {
             this.handleAiMove(squares);
         }
 
@@ -212,7 +258,7 @@ class Game extends Component {
         });
     }
 
-    handleAiMove(squares){
+    handleAiMove(squares) {
         let moveId = calculateAiMove(squares);
         squares[moveId] = 'O';
     }
@@ -236,7 +282,7 @@ class Game extends Component {
         const finalRow = calculateWinner(current.squares);
         const winner = finalRow[0];
 
-        if(!winner){
+        if (!winner) {
             if (i === 'X') {
                 this.setState({
                     playerX: {
@@ -262,12 +308,12 @@ class Game extends Component {
         const finalRow = calculateWinner(current.squares);
         const winner = finalRow[0];
 
-        if(!winner){
+        if (!winner) {
             if (i === 'X') {
                 this.setState({
                     playerX: {
                         name: this.state.playerX.name,
-                        gender: (this.state.playerX.gender===1? 0 : 1)
+                        gender: (this.state.playerX.gender === 1 ? 0 : 1)
                     }
                 })
             }
@@ -275,7 +321,7 @@ class Game extends Component {
                 this.setState({
                     playerO: {
                         name: this.state.playerO.name,
-                        gender: (this.state.playerO.gender===1? 0 : 1)
+                        gender: (this.state.playerO.gender === 1 ? 0 : 1)
                     }
                 })
             }
@@ -304,6 +350,7 @@ class Game extends Component {
         const currentMove = this.state.currentMove;
         const playerO = this.state.playerO;
         const playerX = this.state.playerX;
+        const cheatMode = this.props.cheatMode;
 
         const moves = history.map((step, move) => {
             let row = Math.floor(currentMove[move - 1] / SquareNumber);
@@ -344,9 +391,10 @@ class Game extends Component {
 
         return (
             <div className="panel panel-default">
-                <div className="panel-heading"><h3 className="panel-title">Tic-Tac-Toe game</h3></div>
+                <div className={cheatMode ? "panel-heading shinning-bar" : "panel-heading"}><h3 className="panel-title">Tic-Tac-Toe game</h3></div>
                 <div className="panel-body">
                     <WinnerJudge winner={winner} />
+                    <ModeInfor cheatMode={cheatMode} />
                     <div className="game row">
                         <div className="col-xs-12 col-sm-6 col-md-4 col-md-offset-3">
                             <UserForm
@@ -356,12 +404,13 @@ class Game extends Component {
                                 glyhClick={(i) => this.glyhClick(i)}
                                 genderClick={(i) => this.genderClick(i)}
                                 winner={winner}
-                                />
+                            />
                             <Board
+                                cheatMode={cheatMode}
                                 finalRow={finalRow}
                                 squares={current.squares}
                                 onClick={(i) => this.handleClick(i)}
-                                />
+                            />
                         </div>
                         <div className="col-xs-12 col-sm-6 col-md-2">
                             <div className="game-info">
