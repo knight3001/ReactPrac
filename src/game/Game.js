@@ -5,7 +5,7 @@ import { calculateAiMove, generateWinLine } from './AiMove';
 import Player from './Player';
 
 import Cryface from '../img/cryface.png';
-import EasyGame from '../../public/easy_mode.wav';
+import EasyGame from '../../public/easy_mode.mp3';
 
 import ReactAudioPlayer from 'react-audio-player';
 
@@ -226,6 +226,7 @@ class GameSound extends Component {
                 <ReactAudioPlayer
                     src={EasyGame}
                     autoPlay
+                    loop
                     controls={false}
                 />
             )
