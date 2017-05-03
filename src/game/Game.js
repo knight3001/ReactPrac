@@ -5,6 +5,9 @@ import { calculateAiMove, generateWinLine } from './AiMove';
 import Player from './Player';
 
 import Cryface from '../img/cryface.png';
+import EasyGame from '../../public/easy_mode.wav';
+
+import ReactAudioPlayer from 'react-audio-player';
 
 const SquareNumber = 10; //min 5
 
@@ -185,14 +188,14 @@ class ModeInfor extends Component {
             self.setState({
                 fadeOut: true
             });
-        }, 3000, this);
+        }, 5000, this);
     }
 
     render() {
         const cheatMode = this.props.cheatMode;
         const display = this.state.modeChanged;
         const fadeOut = this.state.fadeOut;
-        let classname = "mode-info bounce-once";
+        let classname = "mode-info bounce-text";
         if (display) {
             if (cheatMode) {
                 return (
@@ -215,6 +218,24 @@ class ModeInfor extends Component {
     }
 }
 
+class GameSound extends Component {
+    render() {
+        const cheatMode = this.props.cheatMode;
+        if (cheatMode) {
+            return (
+                <ReactAudioPlayer
+                    src={EasyGame}
+                    autoPlay
+                    controls={false}
+                />
+            )
+        }
+        else {
+            return null;
+        }
+    }
+}
+
 class Game extends Component {
     constructor() {
         super();
@@ -229,10 +250,17 @@ class Game extends Component {
             stepNumber: 0,
             currentMove: [],
             playerX: playerInitX,
-            playerO: playerInitO
+            playerO: playerInitO,
+            modeChanged: false
         };
 
         this.handleUserInput = this.handleUserInput.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            modeChanged: nextProps.cheatMode !== this.props.cheatMode
+        });
     }
 
     handleClick(i) {
@@ -351,6 +379,7 @@ class Game extends Component {
         const playerO = this.state.playerO;
         const playerX = this.state.playerX;
         const cheatMode = this.props.cheatMode;
+        const modeChanged = this.state.modeChanged;
 
         const moves = history.map((step, move) => {
             let row = Math.floor(currentMove[move - 1] / SquareNumber);
@@ -389,12 +418,23 @@ class Game extends Component {
             statusClass = "alert alert-info";
         }
 
+        let panelClass = "panel-heading shinning-bar";
+        if (modeChanged && cheatMode) {
+            panelClass += " bar-fade-in";
+        }
+        else if (modeChanged && !cheatMode) {
+            panelClass += " bar-fade-out";
+        }
+        else {
+            panelClass += "";
+        }
         return (
             <div className="panel panel-default">
-                <div className={cheatMode ? "panel-heading shinning-bar" : "panel-heading"}><h3 className="panel-title">Tic-Tac-Toe game</h3></div>
+                <div className={panelClass}><h3 className="panel-title">Tic-Tac-Toe game</h3></div>
                 <div className="panel-body">
                     <WinnerJudge winner={winner} />
                     <ModeInfor cheatMode={cheatMode} />
+                    <GameSound cheatMode={cheatMode} />
                     <div className="game row">
                         <div className="col-xs-12 col-sm-6 col-md-4 col-md-offset-3">
                             <UserForm

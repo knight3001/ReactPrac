@@ -1,14 +1,13 @@
 @import url("./css/fireworks.css");
 @import url("./css/bootstrap.icon-extra.min.css");
-@import url("./css/bounce.css");
-@import url("./css/spin.css");
+@import url("./css/animations.css");
 
 .App {
   text-align: center;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
+  animation: spin infinite 20s linear;
   height: 80px;
   width:80px;
 }
@@ -21,11 +20,6 @@
 
 .App-intro {
   font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 body {
@@ -104,7 +98,23 @@ ol, ul {
 }
 
 .shinning-bar{
-  background: linear-gradient( to bottom, rgba(255,255,255,1) 0%, rgba(253,255,197,1) 45%, rgba(243,246,177,1) 55%, rgba(209,210,188,1) 100%);
+  background-size: 200% 100%;
+  background-position: 0 0;
+  background-image: linear-gradient( to right, #f5f5f5 50%, rgba(253,255,197,1) 50% );
+}
+.bar-fade-in{
+  background-position: -100% 0;
+  animation: fillColor 5s 1;
+  -webkit-animation: fillColor 5s 1;
+  -moz-animation: fillColor 5s 1;
+  -o-animation: fillColor 5s 1;
+}
+.bar-fade-out{
+  background-position: 0 0;
+  animation: fillColorReverse 5s 1;
+  -webkit-animation: fillColorReverse 5s 1;
+  -moz-animation: fillCfillColorReverseolor 5s 1;
+  -o-animation: fillColorReverse 5s 1;
 }
 
 .mode-info{
