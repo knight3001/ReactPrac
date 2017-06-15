@@ -1,6 +1,0 @@
-Babel ES6/ES7  -- dzannotti
-npm   -- egamma
-
-//Deploy to GitHub Pages
-npm install --save-dev gh-pages
-npm run deploy (git must be a global command)
