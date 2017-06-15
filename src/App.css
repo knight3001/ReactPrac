@@ -7,6 +7,12 @@
   text-align: center;
 }
 
+.css100{
+  font-size: 16px;
+  color:red;
+  display: none;
+}
+
 .App-logo {
   animation: spin infinite 20s linear;
   height: 80px;
@@ -14,7 +20,7 @@
 }
 
 .App-header {
-  background: url(../public/banner.jpg) no-repeat white;
+  background: url(../public/banner.webp) no-repeat white;
   height: 180px;
   padding: 20px;
 }
